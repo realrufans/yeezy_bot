@@ -3,8 +3,9 @@ import { Bot, InlineKeyboard, Keyboard } from "grammy";
 export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
 const languageKeyboard = new Keyboard().text("/start").resized().build();
-
+const userStates = {};
 bot.command("start", async (ctx) => {
+  userStates[route] = "start";
   const userId = ctx.from.id;
   const name = ctx.from.first_name;
   const username = ctx.from.username;
@@ -58,12 +59,11 @@ bot.command("start", async (ctx) => {
 });
 
 bot.command("yeezy", async (ctx) => {
-  console.log(ctx);
+  userStates[route] = "yeezy";
   const userId = ctx.from.id;
   const name = ctx.from.first_name;
   const username = ctx.from.username;
 
-  
   ctx.reply(`Please enter a valid promit`, {
     reply_markup: { keyboard: languageKeyboard, resize_keyboard: true },
     reply_to_message_id: ctx.message.message_id,
@@ -75,14 +75,19 @@ bot.on("message", async (ctx) => {
   const text = ctx.message.text;
 
   // console.log(text, 'from message');
+  if (userStates.route === "yeezy") {
+    if (!text.toLowerCase().includes("yeezy")) {
+      return ctx.reply(
+        ` I'm sorry but I only generate Yeezy related images. \n Try a different prompt.`,
+        {
+          reply_to_message_id: ctx.message.message_id,
+        }
+      );
+    }
 
-  if (!text.toLowerCase().includes("yeezy")) {
-    return ctx.reply(
-      ` I'm sorry but I only generate Yeezy related images. \n Try a different prompt.`,
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
+    ctx.reply(`Generating image...`, {
+      reply_to_message_id: ctx.message.message_id,
+    });
   }
 });
 
