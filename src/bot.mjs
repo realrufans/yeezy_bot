@@ -70,9 +70,6 @@ bot.on("message", async (ctx) => {
   const chatId = ctx.chat.id;
   const messageId = ctx.message.message_id;
 
-
-  
-
   try {
     // console.log(text, 'from message');
     if (userStates.route === "yeezy") {
@@ -91,19 +88,28 @@ bot.on("message", async (ctx) => {
         { reply_to_message_id: messageId }
       );
 
-      const respnose = await openai.images.generate({
-        model: "dall-e-3",
-        prompt: text,
-      });
-
-      const imageUrl = respnose.data[0].url;
-      console.log(imageUrl);
-      if (imageUrl) {
-        await ctx.replyWithPhoto(imageUrl, {
-          caption: `✅ Yeezy`,
-          reply_to_message_id: messageId,
-          parse_mode: "HTML", // Set the parse mode to HTML
+      try {
+        const respnose = await openai.images.generate({
+          model: "dall-e-3",
+          prompt: text,
         });
+        const imageUrl = respnose.data[0].url;
+        console.log(imageUrl);
+        if (imageUrl) {
+          await ctx.replyWithPhoto(imageUrl, {
+            caption: `✅ Yeezy`,
+            reply_to_message_id: messageId,
+            parse_mode: "HTML", // Set the parse mode to HTML
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        ctx.reply(
+          "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
+        );
+
+        userStates.route = "";
+        return;
       }
     }
   } catch (error) {
