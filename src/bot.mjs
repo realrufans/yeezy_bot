@@ -3,9 +3,12 @@ import { Bot, InlineKeyboard, Keyboard } from "grammy";
 export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
 const languageKeyboard = new Keyboard().text("/start").resized().build();
-const userStates = {};
+const userStates = {route: ''};
 bot.command("start", async (ctx) => {
+
+
   userStates[route] = "start";
+  
   const userId = ctx.from.id;
   const name = ctx.from.first_name;
   const username = ctx.from.username;
@@ -18,14 +21,7 @@ bot.command("start", async (ctx) => {
   );
 });
 
-bot.hears(["🇺🇦 Українська", "🇬🇧 English"], async (ctx) => {
-  const selectedLang = ctx.message.text === "🇺🇦 Українська" ? "uk" : "en";
-  const userId = ctx.from.id;
-
-  ctx.reply(`${"welcomeMessage"}, ${ctx.from.first_name}!`, {
-    reply_markup: await mainMenu(selectedLang),
-  });
-});
+ 
 
 async function generateFAQMenu(lang) {
   const faqData = await getFAQ();
