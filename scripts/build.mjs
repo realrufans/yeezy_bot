@@ -14,6 +14,7 @@ if (!allowedEnvs.includes(VERCEL_ENV)) {
 
 // Генерация URL для webhook
 const url = getURL({ path: "api/update" });
+  console.log("URL webhook:", url);
 
 // Параметры настройки webhook
 const options = { };
