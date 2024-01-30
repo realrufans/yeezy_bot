@@ -83,10 +83,7 @@ bot.on("message", async (ctx) => {
         );
       }
 
-      const processingMessage = await ctx.reply(
-        "Generating Image, please wait...",
-        { reply_to_message_id: messageId }
-      );
+ 
 
       try {
         const respnose = await openai.images.generate({
