@@ -4,12 +4,11 @@ export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const languageKeyboard = new Keyboard().text("/start").resized().build();
 
-const userStates = { route: "" };
+const userStates = {};
 
 bot.command("start", async (ctx) => {
-  userStates.route = "start";
-
   const userId = ctx.from.id;
+
   const name = ctx.from.first_name;
   const username = ctx.from.username;
 
@@ -52,13 +51,15 @@ bot.command("start", async (ctx) => {
   );
 });
 
+let originalOwner = null;
 bot.command("yeezy", async (ctx) => {
-  userStates.route = "yeezy";
   const userId = ctx.from.id;
-  const name = ctx.from.first_name;
-  const username = ctx.from.username;
+  const userName = ctx.message.from.username;
+  userStates[userId] = { route: "yeezy", processing: false };
 
-  ctx.reply(`Please enter a prompt to generate a Yeezy image:`, {
+  originalOwner = userId;
+
+  ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`, {
     reply_markup: { keyboard: languageKeyboard, resize_keyboard: true },
     reply_to_message_id: ctx.message.message_id,
   });
@@ -72,7 +73,10 @@ bot.on("message", async (ctx) => {
 
   try {
     // console.log(text, 'from message');
-    if (userStates.route === "yeezy") {
+    if (
+      userStates[userId]?.route === "yeezy" &&
+      !userStates[userId].processing
+    ) {
       if (!text.toLowerCase().includes("yeezy")) {
         return ctx.reply(
           "I'm sorry, but I only generate images related to Yeezy. Please include the word 'yeezy' in your prompt. For example, try sending a prompt like: <code>Yeezy sneakers on a beach</code>. \n /start",
@@ -83,34 +87,44 @@ bot.on("message", async (ctx) => {
         );
       }
 
-    const processingMessage = await ctx.reply(
-      "Generating Image, please wait...",
-      { reply_to_message_id: messageId }
-    );
+      userStates[userId].processing = true;
 
-      try {
-        const respnose = await openai.images.generate({
-          model: "dall-e-3",
-          prompt: text,
-        });
-        const imageUrl = respnose.data[0].url;
-        console.log(imageUrl);
-        if (imageUrl) {
-          await ctx.replyWithPhoto(imageUrl, {
-            caption: `✅ Yeezy`,
-            reply_to_message_id: messageId,
-            parse_mode: "HTML", // Set the parse mode to HTML
-          });
-        }
-      } catch (error) {
-        console.error(error);
-        ctx.reply(
-          "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
-        );
+      const processingMessage = await ctx.reply(
+        "Generating Image, please wait...",
+        { reply_to_message_id: messageId }
+      );
 
-        userStates.route = "";
-        return;
-      }
+      // if (userId === processingMessage.from.id) {
+      //   console.log(userId, "from message");
+      // }
+      // ctx.api.deleteMessage(chatId, processingMessage.message_id);
+
+      userStates.route = "";
+      userStates.processing = false;
+      // try {
+      //   const respnose = await openai.images.generate({
+      //     model: "dall-e-3",
+      //     prompt: text,
+      //   });
+      //   const imageUrl = respnose.data[0].url;
+      //   console.log(imageUrl);
+      //   if (imageUrl) {
+      //     await ctx.replyWithPhoto(imageUrl, {
+      //       caption: `✅ Yeezy`,
+      //       reply_to_message_id: messageId,
+      //       parse_mode: "HTML", // Set the parse mode to HTML
+      //     });
+      //   }
+      //   userStates.route = "";
+      // } catch (error) {
+      //   console.error(error);
+      //   ctx.reply(
+      //     "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
+      //   );
+
+      //   userStates.route = "";
+      //   return;
+      // }
     }
   } catch (error) {
     console.error(error);
