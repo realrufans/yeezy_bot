@@ -51,7 +51,6 @@ bot.command("start", async (ctx) => {
   );
 });
 
-let originalOwner = null;
 bot.command("yeezy", async (ctx) => {
   const userId = ctx.from.id;
   const userName = ctx.message.from.username;
@@ -103,7 +102,6 @@ bot.on("message", async (ctx) => {
       if (imageUrl) {
         userStates.processing = false;
         userStates.route = "";
-        ctx.api.deleteMessage(chatId, processingMessage.message_id);
         userStates.processing = false;
         await ctx.replyWithPhoto(imageUrl, {
           caption: `✅ Yeezy`,
