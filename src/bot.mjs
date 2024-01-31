@@ -94,37 +94,23 @@ bot.on("message", async (ctx) => {
         { reply_to_message_id: messageId }
       );
 
-      // if (userId === processingMessage.from.id) {
-      //   console.log(userId, "from message");
-      // }
-      // ctx.api.deleteMessage(chatId, processingMessage.message_id);
-
-      userStates.route = "";
-      userStates.processing = false;
-      // try {
-      //   const respnose = await openai.images.generate({
-      //     model: "dall-e-3",
-      //     prompt: text,
-      //   });
-      //   const imageUrl = respnose.data[0].url;
-      //   console.log(imageUrl);
-      //   if (imageUrl) {
-      //     await ctx.replyWithPhoto(imageUrl, {
-      //       caption: `✅ Yeezy`,
-      //       reply_to_message_id: messageId,
-      //       parse_mode: "HTML", // Set the parse mode to HTML
-      //     });
-      //   }
-      //   userStates.route = "";
-      // } catch (error) {
-      //   console.error(error);
-      //   ctx.reply(
-      //     "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
-      //   );
-
-      //   userStates.route = "";
-      //   return;
-      // }
+      const respnose = await openai.images.generate({
+        model: "dall-e-3",
+        prompt: text,
+      });
+      const imageUrl = respnose.data[0].url;
+      console.log(imageUrl);
+      if (imageUrl) {
+        userStates.processing = false;
+        userStates.route = "";
+        ctx.api.deleteMessage(chatId, processingMessage.message_id);
+        userStates.processing = false;
+        await ctx.replyWithPhoto(imageUrl, {
+          caption: `✅ Yeezy`,
+          reply_to_message_id: messageId,
+          parse_mode: "HTML", // Set the parse mode to HTML
+        });
+      }
     }
   } catch (error) {
     console.error(error);
@@ -132,7 +118,6 @@ bot.on("message", async (ctx) => {
       "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
     );
 
-    userStates.route = "";
     return;
   }
 });
