@@ -109,9 +109,10 @@ bot.on("message", async (ctx) => {
       }
     }
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     ctx.reply(
-      "An error occurred while generating the image. \n Please contact @realrufans22 if the problem persists."
+      `${error.message} \n Please contact @realrufans22 if the problem persists.`,
+      { reply_to_message_id: messageId }
     );
 
     return;
