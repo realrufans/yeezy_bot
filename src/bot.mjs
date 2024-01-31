@@ -56,8 +56,6 @@ bot.command("yeezy", async (ctx) => {
   const userName = ctx.message.from.username;
   userStates[userId] = { route: "yeezy", processing: false };
 
-  originalOwner = userId;
-
   ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`, {
     reply_markup: { keyboard: languageKeyboard, resize_keyboard: true },
     reply_to_message_id: ctx.message.message_id,
