@@ -53,8 +53,7 @@ bot.command("yeezy", async (ctx) => {
   userStates[userId] = { route: "yeezy", processing: false };
 
   ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`,
-            {  reply_to_message_id: ctx.message.message_id}
-  });
+            {  reply_to_message_id: ctx.message.message_id});
 });
 
 bot.on("message", async (ctx) => {
