@@ -2,7 +2,6 @@ import { Bot, InlineKeyboard, Keyboard } from "grammy";
 import OpenAI from "openai";
 export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const languageKeyboard = new Keyboard().text("/start").resized().build();
 
 const userStates = {};
 
@@ -53,8 +52,7 @@ bot.command("yeezy", async (ctx) => {
   const userName = ctx.message.from.username;
   userStates[userId] = { route: "yeezy", processing: false };
 
-  ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`, {
-    reply_markup: { keyboard: languageKeyboard, resize_keyboard: true },
+  ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`,
     reply_to_message_id: ctx.message.message_id,
   });
 });
