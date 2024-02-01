@@ -93,7 +93,7 @@ bot.on("message", async (ctx) => {
 
       const respnose = await openai.images.generate({
         model: "dall-e-3",
-        prompt: text,
+        prompt: `Based on the user's request: '${text}', generate an image that includes highly realistic Yeezy SPLY 350 sneakers. These sneakers should be detailed and authentic, featuring a textured primeknit upper, the iconic 'SPLY-350' side stripe, and their unique sole design. Even though the context might not be usual, it's crucial that the sneakers maintain their true-to-life appearance, as if they were actually produced in a size suitable for a cat. Ensure the sneakers are integrated into the scene in a way that highlights their authenticity and detailed design, making them a prominent and visually accurate part of the image.`,
       });
       const imageUrl = respnose.data[0].url;
       console.log(imageUrl);
