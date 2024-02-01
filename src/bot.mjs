@@ -44,10 +44,7 @@ bot.command("start", async (ctx) => {
     ` Hello, I'm YeezyBot!  \n
     Here's what I can do:
     - Generate images with /yeezy \n 
-    Created by ${username}`,
-    {
-      reply_markup: { keyboard: languageKeyboard, resize_keyboard: true },
-    }
+    Created by ${username}`
   );
 });
 
@@ -93,7 +90,7 @@ bot.on("message", async (ctx) => {
 
       const respnose = await openai.images.generate({
         model: "dall-e-3",
-        prompt: `Based on the user's request: '${text}', generate an image that prominently features highly realistic Yeezy SPLY 350 sneakers. These sneakers should be detailed and authentic, with a textured primeknit upper, the iconic 'SPLY-350' side stripe, and their unique sole design. Regardless of the usual or unusual context described by the user, it's crucial for the sneakers to maintain a true-to-life appearance, as if they were custom-made to fit the subject in the user's request. The sneakers should be integrated into the scene in such a way that their authenticity and detailed design are highlighted, making them a visually accurate and standout element of the image.`,
+        prompt: `Based on the user's request: '${text}', generate an image that prominently features highly realistic Yeezy sneakers. These sneakers should be detailed and authentic. Regardless of the usual or unusual context described by the user, it's crucial for the sneakers to maintain a true-to-life appearance, as if they were custom-made to fit the subject in the user's request. The sneakers should be integrated into the scene in such a way that their authenticity and detailed design are highlighted, making them a visually accurate and standout element of the image.`,
       });
       const imageUrl = respnose.data[0].url;
       console.log(imageUrl);
