@@ -1,4 +1,4 @@
-import { Bot, InlineKeyboard, Keyboard } from "grammy";
+import { Bot } from "grammy";
 import OpenAI from "openai";
 export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -18,18 +18,6 @@ bot.command("start", async (ctx) => {
     Created by @realrufans22`
   );
 });
-
-async function generateFAQMenu(lang) {
-  const faqData = await getFAQ();
-  const keyboard = new InlineKeyboard();
-
-  for (const faq of faqData) {
-    // const question = await getTranslation(faq.question[lang], lang);
-    keyboard.text(question, `faq_${faq._id}`).row();
-  }
-
-  return keyboard;
-}
 
 bot.command("start", async (ctx) => {
   const username = ctx.from.username;
@@ -52,8 +40,9 @@ bot.command("yeezy", async (ctx) => {
   const userName = ctx.message.from.username;
   userStates[userId] = { route: "yeezy", processing: false };
 
-  ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`,
-            {  reply_to_message_id: ctx.message.message_id});
+  ctx.reply(`@${userName} Please enter a prompt to generate a Yeezy image:`, {
+    reply_to_message_id: ctx.message.message_id,
+  });
 });
 
 bot.on("message", async (ctx) => {
